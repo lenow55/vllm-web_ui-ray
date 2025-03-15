@@ -1,0 +1,43 @@
+services:
+  vllm_ray:
+    build:
+      context: .
+      dockerfile: Ray.Dockerfile
+    memswap_limit: 13G
+    deploy:
+      resources:
+        limits:
+          cpus: 11
+          memory: 13G
+        reservations:
+          cpus: 10
+          memory: 13G
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    entrypoint:
+      - "ray"
+      - "start"
+    command:
+      - "--node-ip-address=192.168.45.15"
+      - "--address=${NODE_NAME:-node0}"
+      - "--num-cpus=${N_CPUS:-1}"
+      - "--num-gpus=${N_GPUS:-1}"
+      - "--disable-usage-stats"
+      - "--block"
+    tty: true
+    network_mode: host
+    environment:
+      VLLM_HOST_IP: 192.168.45.15 
+    # VLLM_USE_V1: 1
+      GLOO_SOCKET_IFNAME: enp0s31f6 # wlan0
+      NCCL_SOCKET_IFNAME: enp0s31f6 # wlan0
+      VLLM_LOGGING_CONFIG_PATH: /logging_config.json
+      NCCL_DEBUG: INFO
+      NCCL_DEBUG_FILE: /nccl_log.%h.%p
+    volumes:
+      - ./models_cache:/root/.cache/huggingface/hub
+      - ./logging_config.json:/logging_config.json
+      - ./ray_vllm_args.yaml:/config/vllm.yaml
+    shm_size: "9g"

@@ -1,0 +1,24 @@
+# заменить по желанию на:
+# "Qwen/Qwen2.5-7B-Instruct-GPTQ-Int8"
+model: "Qwen/Qwen2.5-0.5B-Instruct"
+
+# "Qwen/Qwen2.5-14B-Instruct-GPTQ-Int8"
+# "Qwen/Qwen2.5-72B-Instruct-GPTQ-Int8"
+# served_model_name: "Qwen/Qwen2.5-14B-Instruct-1M"
+
+gpu_memory_utilization: 0.7 # каждый гпу будет загружен на 70%. Больше - лучше! Допустимый предел 0 - 1 Подбирать пока не заработает
+distributed_executor_backend: ray
+tensor_parallel_size: 1 # количество гпу, на которых будет крутиться модель параллельно
+max_model_len: 5000
+quantization: "gptq"
+# seed: 42
+# use_v2_block_manager: true # depr
+api_key: "NYXV2sS3PLDYLbC"
+enable-chunked-prefill: true
+max_num_batched_tokens: 2048
+# hf_overrides: '{"local_files_only": true}'
+swap_space: 1 # int: размер подкачки в ram (tensor_parallel_size * swap_space) = общий объём подкачки (можно уменьшить)
+# preemption_mode: swap
+# cpu_offload_gb: 3
+dtype: half
+# enforce_eager: True

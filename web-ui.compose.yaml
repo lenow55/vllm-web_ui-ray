@@ -1,0 +1,21 @@
+services:
+  open-webui:
+    image: ghcr.io/open-webui/open-webui:main
+    env_file:
+      - path: ./web-ui.env
+    ports:
+      - "9080:8080"
+    volumes:
+      - web_ui_volume:/app/backend/data
+    # depends_on:
+    #   vllm_openai:
+    #     condition: service_healthy
+    #     restart: true
+
+    networks:
+      - vllm_openweb_ui_net
+    extra_hosts:
+      - host.docker.internal:host-gateway
+
+volumes:
+  web_ui_volume:

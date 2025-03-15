@@ -1,0 +1,39 @@
+networks:
+  vllm_openweb_ui_net:
+
+services:
+  vllm_openai:
+    image: vllm/vllm-openai:v0.7.3
+    command:
+      - "--config-format=auto" # нужно чтобы следующий аргумент распарсился
+      - "--config"
+      - "/config/vllm.yaml"
+    ports:
+      - "8953:8000"
+    volumes:
+      - ./models_cache:/root/.cache/huggingface/hub
+      - ./vllm_args.yaml:/config/vllm.yaml
+
+    shm_size: "30g"
+    restart: none
+    environment:
+      PYTORCH_CUDA_ALLOC_CONF: expandable_segments:True
+      # VLLM_USE_V1: 1
+    networks:
+      - vllm_openweb_ui_net
+
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 60s
+      retries: 3
+      start_period: 300s
+
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              capabilities: [gpu]
+              device_ids: ["0"]
+              # count: all # подключить вообще всё, на проде не рекомендуется

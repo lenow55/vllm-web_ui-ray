@@ -1,0 +1,28 @@
+{
+  "version": 1,
+  "disable_existing_loggers": false,
+  "formatters": {
+    "detailed": {
+      "format": "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+    }
+  },
+  "handlers": {
+    "console": {
+      "class": "logging.StreamHandler",
+      "level": "DEBUG",
+      "formatter": "detailed",
+      "stream": "ext://sys.stdout"
+    }
+  },
+  "loggers": {
+    "vllm.distributed.device_communicators.shm_broadcast": {
+      "level": "DEBUG",
+      "handlers": ["console"],
+      "propagate": false
+    }
+  },
+  "root": {
+    "level": "DEBUG",
+    "handlers": ["console"]
+  }
+}

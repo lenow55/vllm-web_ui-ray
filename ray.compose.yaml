@@ -1,0 +1,49 @@
+services:
+  vllm_ray:
+    build:
+      context: .
+      dockerfile: Ray.Dockerfile
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    entrypoint:
+      - "ray"
+      - "start"
+    command:
+      - "--head"
+      - "--node-ip-address=192.168.45.10"
+      - "--num-cpus=${N_CPUS:-1}"
+      - "--num-gpus=${N_GPUS:-1}"
+      - "--include-dashboard=true"
+      - "--dashboard-host=0.0.0.0"
+      - "--dashboard-port=8965"
+      - "--port=6379"
+      - "--block"
+      - "--disable-usage-stats"
+    tty: true
+    network_mode: host
+    environment:
+      VLLM_HOST_IP: 192.168.45.10
+      # VLLM_USE_V1: 1
+      GLOO_SOCKET_IFNAME: enp9s0 # wlan0
+      NCCL_SOCKET_IFNAME: enp9s0 # wlan0
+      VLLM_LOGGING_CONFIG_PATH: /logging_config.json
+      NCCL_DEBUG: INFO
+      NCCL_DEBUG_FILE: /nccl_log.%h.%p
+      # NCCL_P2P_DISABLE: 1
+      # NCCL_SOCKET_NTHREADS: 2
+      # NCCL_NSOCKS_PERTHREAD: 2
+      # NCCL_CROSS_NIC: 0
+    # ports:
+    #   - "8965:8965"
+    #   - "6379:6379"
+    #   - "8953:8000" # на головной ноде ещё пробросить порт vllm надо
+    volumes:
+      - ./models_cache:/root/.cache/huggingface/hub/
+      - ./logging_config.json:/logging_config.json
+      - ./ray_vllm_args.yaml:/config/vllm.yaml
+    shm_size: "20g"
