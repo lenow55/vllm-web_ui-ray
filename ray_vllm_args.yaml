@@ -14,7 +14,7 @@ quantization: "gptq"
 # seed: 42
 # use_v2_block_manager: true # depr
 api_key: "NYXV2sS3PLDYLbC"
-enable-chunked-prefill: true
+enable_chunked_prefill: true
 max_num_batched_tokens: 2048
 # hf_overrides: '{"local_files_only": true}'
 swap_space: 1 # int: размер подкачки в ram (tensor_parallel_size * swap_space) = общий объём подкачки (можно уменьшить)

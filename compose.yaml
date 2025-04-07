@@ -3,7 +3,7 @@ networks:
 
 services:
   vllm_openai:
-    image: vllm/vllm-openai:v0.7.3
+    image: vllm/vllm-openai:v0.8.3
     command:
       - "--config-format=auto" # нужно чтобы следующий аргумент распарсился
       - "--config"
