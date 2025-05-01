@@ -9,6 +9,7 @@ services:
           devices:
             - driver: nvidia
               count: all
+              device_ids: ["1"]
               capabilities: [gpu]
     entrypoint:
       - "ray"
@@ -28,7 +29,7 @@ services:
     network_mode: host
     environment:
       VLLM_HOST_IP: 192.168.45.10
-      # VLLM_USE_V1: 1
+      VLLM_USE_V1: 1
       GLOO_SOCKET_IFNAME: enp9s0 # wlan0
       NCCL_SOCKET_IFNAME: enp9s0 # wlan0
       VLLM_LOGGING_CONFIG_PATH: /logging_config.json

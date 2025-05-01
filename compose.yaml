@@ -3,7 +3,8 @@ networks:
 
 services:
   vllm_openai:
-    image: vllm/vllm-openai:v0.8.3
+    image: vllm/vllm-openai:v0.8.5
+
     command:
       - "--config-format=auto" # нужно чтобы следующий аргумент распарсился
       - "--config"
@@ -13,12 +14,17 @@ services:
     volumes:
       - ./models_cache:/root/.cache/huggingface/hub
       - ./vllm_args.yaml:/config/vllm.yaml
+      - ./compile_cache:/root/.cache/vllm
 
     shm_size: "30g"
+    # cpuset: "0-3"
     restart: none
     environment:
-      PYTORCH_CUDA_ALLOC_CONF: expandable_segments:True
-      # VLLM_USE_V1: 1
+      PYTORCH_CUDA_ALLOC_CONF: expandable_segments:True #,backend:cudaMallocAsync #,max_split_size_mb:512
+      CUDA_DEVICE_ORDER: FASTEST_FIRST
+      # TF_FORCE_GPU_ALLOW_GROWTH: True
+      # TRANSFORMERS_OFFLINE: 1
+      VLLM_USE_V1: 1
     networks:
       - vllm_openweb_ui_net
 
@@ -27,7 +33,7 @@ services:
       interval: 30s
       timeout: 60s
       retries: 3
-      start_period: 300s
+      start_period: 400s
 
     deploy:
       resources:
@@ -35,5 +41,5 @@ services:
           devices:
             - driver: nvidia
               capabilities: [gpu]
-              device_ids: ["0"]
+              device_ids: ["1"]
               # count: all # подключить вообще всё, на проде не рекомендуется
