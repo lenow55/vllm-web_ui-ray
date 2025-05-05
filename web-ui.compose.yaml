@@ -20,3 +20,6 @@ services:
 
 volumes:
   web_ui_volume:
+
+networks:
+  vllm_openweb_ui_net:

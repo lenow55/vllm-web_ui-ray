@@ -5,27 +5,33 @@
 # model: "Qwen/Qwen2.5-7B-Instruct-GPTQ-Int8"
 # model: "Qwen/Qwen2.5-7B-Instruct"
 # model: "Qwen/Qwen2.5-Coder-7B-Instruct-GPTQ-Int8"
-model: "Qwen/Qwen3-4B"
-# model: "Qwen/Qwen3-8B-FP8"
+# model: "Qwen/Qwen3-4B"
+model: "Qwen/Qwen3-8B-FP8"
 
 # заменить по желанию на:
 # served_model_name: "Qwen/Qwen2.5-14B-Instruct-1M"
 
-gpu_memory_utilization: 0.95 # каждый гпу будет загружен на 70%. Больше - лучше! Допустимый предел 0 - 1 Подбирать пока не заработает
+gpu_memory_utilization: 0.90 # каждый гпу будет загружен на 70%. Больше - лучше! Допустимый предел 0 - 1 Подбирать пока не заработает
 tensor_parallel_size: 1 # количество гпу, на которых будет крутиться модель параллельно
 pipeline_parallel_size: 1
-max_model_len: 31000 # для "Qwen/Qwen2.5-14B-Instruct-1M" установить на 1000000 (или меньше, если не заработает)
+max_model_len: 18000 # для "Qwen/Qwen2.5-14B-Instruct-1M" установить на 1000000 (или меньше, если не заработает)
+# max_model_len: 35000 # для "Qwen/Qwen2.5-14B-Instruct-1M" установить на 1000000 (или меньше, если не заработает)
 # quantization: "gptq" # закомментировать для "Qwen/Qwen2.5-14B-Instruct-1M"
 seed: 42 # дальше не трогать!
 api_key: "NYXV2sS3PLDYLbC"
 enable-chunked-prefill: true
-max_num_batched_tokens: 1024
+max_num_batched_tokens: 2048
 # hf_overrides: '{"local_files_only": true}'
-swap_space: 4 # int: размер подкачки в ram (tensor_parallel_size * swap_space) = общий объём подкачки (можно уменьшить)
+swap_space: 2 # int: размер подкачки в ram (tensor_parallel_size * swap_space) = общий объём подкачки (можно уменьшить)
 # preemption_mode: swap
-# cpu_offload_gb: 22
+# cpu_offload_gb: 2
 # speculative_config: '{"method": "ngram", "num_speculative_tokens": 5 }'
 # logits_processor_pattern: ".*AllowedTokenIdsLogitsProcessor"
-# dtype: half
-enable_reasoning: true
-reasoning_parser: deepseek_r1
+# dtype: float16
+
+enable_reasoning: true # Enables reasoning mode for the model
+reasoning_parser: deepseek_r1 # Specifies the parser to use for reasoning
+enable_auto_tool_choice: true
+tool_call_parser: hermes
+
+kv_transfer_config: '{"kv_connector":"LMCacheConnectorV1", "kv_role":"kv_both"}'

@@ -1,0 +1,7 @@
+{
+  "typeCheckingMode": "off",
+  "ignore": [],
+  "exclude": ["compile_cache", "models_cache", "venv"],
+  "pythonVersion": "3.12",
+  "pythonPlatform": "Linux"
+}

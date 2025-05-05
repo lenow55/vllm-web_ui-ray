@@ -3,7 +3,10 @@ networks:
 
 services:
   vllm_openai:
-    image: vllm/vllm-openai:v0.8.5
+    # image: vllm/vllm-openai:v0.8.5.post1
+    build:
+      context: .
+      dockerfile: LmCache.Dockerfile
 
     command:
       - "--config-format=auto" # нужно чтобы следующий аргумент распарсился
@@ -17,14 +20,19 @@ services:
       - ./compile_cache:/root/.cache/vllm
 
     shm_size: "30g"
-    # cpuset: "0-3"
     restart: none
     environment:
       PYTORCH_CUDA_ALLOC_CONF: expandable_segments:True #,backend:cudaMallocAsync #,max_split_size_mb:512
-      CUDA_DEVICE_ORDER: FASTEST_FIRST
+      CUDA_DEVICE_ORDER: PCI_BUS_ID # FASTEST_FIRST
+      LMCACHE_USE_EXPERIMENTAL: True
+      LMCACHE_CHUNK_SIZE: 256
+      LMCACHE_LOCAL_CPU: True
+      LMCACHE_MAX_LOCAL_CPU_SIZE: 5.0
       # TF_FORCE_GPU_ALLOW_GROWTH: True
       # TRANSFORMERS_OFFLINE: 1
-      VLLM_USE_V1: 1
+      # VLLM_USE_V1: 0
+      # VLLM_PP_LAYER_PARTITION: "9,27"
+      # OMP_NUM_THREADS: 5
     networks:
       - vllm_openweb_ui_net
 
