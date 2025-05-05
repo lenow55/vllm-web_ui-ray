@@ -30,6 +30,11 @@ services:
     tty: true
     network_mode: host
     environment:
+      PYTORCH_CUDA_ALLOC_CONF: expandable_segments:True #,backend:cudaMallocAsync #,max_split_size_mb:512
+      LMCACHE_USE_EXPERIMENTAL: True
+      LMCACHE_CHUNK_SIZE: 256
+      LMCACHE_LOCAL_CPU: True
+      LMCACHE_MAX_LOCAL_CPU_SIZE: 3.0
       VLLM_HOST_IP: 192.168.45.15
       VLLM_USE_V1: 1
       GLOO_SOCKET_IFNAME: enp0s31f6 # wlan0

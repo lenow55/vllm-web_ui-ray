@@ -9,7 +9,8 @@ model: "Qwen/Qwen3-8B-FP8"
 
 gpu_memory_utilization: 0.90 # каждый гпу будет загружен на 70%. Больше - лучше! Допустимый предел 0 - 1 Подбирать пока не заработает
 distributed_executor_backend: ray
-tensor_parallel_size: 2 # количество гпу, на которых будет крутиться модель параллельно
+tensor_parallel_size: 1 # количество гпу, на которых будет крутиться модель параллельно
+pipeline_parallel_size: 2
 max_model_len: 10000
 # quantization: "gptq"
 # seed: 42
@@ -23,3 +24,10 @@ swap_space: 2 # int: размер подкачки в ram (tensor_parallel_size 
 # cpu_offload_gb: 3
 # dtype: half
 # enforce_eager: True
+
+enable_reasoning: true # Enables reasoning mode for the model
+reasoning_parser: deepseek_r1 # Specifies the parser to use for reasoning
+enable_auto_tool_choice: true
+tool_call_parser: hermes
+
+kv_transfer_config: '{"kv_connector":"LMCacheConnectorV1", "kv_role":"kv_both"}'
