@@ -22,4 +22,7 @@ volumes:
   web_ui_volume:
 
 networks:
+  internal:
   vllm_openweb_ui_net:
+    external: true
+    name: vllm_openweb_ui_net

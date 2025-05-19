@@ -43,7 +43,7 @@ services:
       NCCL_DEBUG: INFO
       NCCL_DEBUG_FILE: /nccl_log.%h.%p
     volumes:
-      - ./models_cache:/root/.cache/huggingface/hub
+      - ~/models_cache:/root/.cache/huggingface/hub
       - ./logging_config.json:/logging_config.json
       - ./ray_vllm_args.yaml:/config/vllm.yaml
     shm_size: "9g"
