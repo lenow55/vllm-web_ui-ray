@@ -1,5 +1,8 @@
 networks:
+  internal:
   vllm_openweb_ui_net:
+    external: true
+    name: vllm_openweb_ui_net
 
 services:
   vllm_openai:
@@ -15,7 +18,7 @@ services:
     ports:
       - "8953:8000"
     volumes:
-      - ./models_cache:/root/.cache/huggingface/hub
+      - ~/models_cache:/root/.cache/huggingface/hub
       - ./vllm_args.yaml:/config/vllm.yaml
       - ./compile_cache:/root/.cache/vllm
 
